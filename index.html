@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Collection</title>
+</head>
+<body>
+	<style>
+	.record {
+		margin: 10px;
+		padding: 10px;
+		border: 1px solid #ddd;
+		display: inline-block;
+	}
+
+	.record-container {
+    width: 100%; /* Full width of the container */
+    max-width: 800px; /* Maximum image width */
+    margin: 10px auto; /* Centering the container */
+}
+
+.record-img {
+    display: block; /* Remove inline spacing */
+    width: 100%; /* Full width of the parent container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 750px; /* Maximum image height */
+    object-fit: cover; /* Ensures image covers the area */
+    border: 1px solid #ddd; /* Optional border */
+    border-radius: 5px; /* Optional rounded corners */
+}
+
+.arrow {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%);
+    font-size: 96px; /* Size of the arrow */
+    cursor: pointer;
+    z-index: 10; /* Ensure arrow is above the image */
+}
+
+.left-arrow {
+    left: 400px; /* Adjust distance from the image */
+}
+
+.right-arrow {
+    right: 400px; /* Adjust distance from the image */
+}
+
+/* Add additional styling for disabled state if needed */
+.arrow[disabled] {
+    opacity: 0.5;
+    cursor: default;
+}
+.spinner {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto; /* Center the spinner */
+
+}
+
+	</style>
+	<div id="app">
+
+	<div class="arrow left-arrow" @click="goToPreviousRecord" :disabled="currentIndex === 0">&#9664;</div> <!-- Unicode Left Arrow -->
+
+    <div v-if="loading" class="spinner"></div>
+
+    <div v-if="currentRecord && !loading" class="record-container">
+        <img :src="imageCache[currentRecord.id] ? imageCache[currentRecord.id].basic_information.cover_image : currentRecord.basic_information.cover_image" :alt="currentRecord.basic_information.title" class="record-img" @load="imageLoaded(currentRecord.id)">
+        <p>{{ currentRecord.basic_information.artists[0].name }} : {{currentRecord.basic_information.title }} ({{currentRecord.basic_information.year}})</p>
+        <div>API Calls Made: {{ apiCallCount }}</div>
+        <button @click="toggleAutoScroll">{{ isAutoScrolling ? 'Stop Auto-Scroll' : 'Start Auto-Scroll' }}</button>
+    </div>
+
+	<div class="arrow right-arrow" @click="goToNextRecord" :disabled="currentIndex >= records.length - 1">&#9654;</div> <!-- Unicode Right Arrow -->
+    
+</div>
+
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Your JavaScript File -->
+    <script src="app.js"></script>
+</body>
+</html>
